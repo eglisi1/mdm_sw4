@@ -1,0 +1,16 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+}
+
+canvas {
+    border: 1px solid black;
+    cursor: crosshair;
+}
+
+button {
+    margin: 10px;
+}

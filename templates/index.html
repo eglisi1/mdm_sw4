@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MNIST Digit Recognition</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <h1>MNIST Digit Recognition</h1>
+    <canvas id="canvas" width="280" height="280"></canvas>
+    <div>
+        <button id="clear-button">Clear</button>
+        <button id="predict-button">Predict</button>
+    </div>
+    <h2 id="result">Draw a digit and click Predict</h2>
+
+    <script>
+        const canvas = document.getElementById("canvas");
+        let ctx = canvas.getContext("2d");
+        let isDrawing = false;
+
+        canvas.addEventListener("mousedown", (e) => {
+            isDrawing = true;
+            ctx.lineWidth = 10;
+            ctx.lineJoin = ctx.lineCap = "round";
+            ctx.moveTo(e.offsetX, e.offsetY);
+        });
+
+        canvas.addEventListener("mousemove", (e) => {
+            if (!isDrawing) return;
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+        });
+
+        canvas.addEventListener("mouseup", () => {
+            isDrawing = false;
+        });
+
+        document.getElementById("clear-button").addEventListener("click", () => {
+            location.reload();
+        });
+
+        document.getElementById("predict-button").addEventListener("click", () => {
+            const dataURL = canvas.toDataURL("image/png");
+            $.post("/predict", { image: dataURL }, (response) => {
+                document.getElementById("result").innerText = "Predicted digit: " + response.prediction;
+            });
+        });
+    </script>
+</body>
+
+</html>
